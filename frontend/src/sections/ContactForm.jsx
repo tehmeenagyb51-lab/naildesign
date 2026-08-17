@@ -12,7 +12,7 @@ const ContactForm = () => {
 
     //* Contact-Us API 
     //* ==============
-    const API = "http://localhost:5000/send-email";
+    const API = "https://naildesign-backend.vercel.app/send-email";
 
 
     //* React Hook Form
