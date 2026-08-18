@@ -2,8 +2,7 @@ import { useState } from "react";
 import { IoIosSend } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { motion } from "framer-motion";
-
+import { AnimatePresence, motion } from "framer-motion";
 
 const ContactForm = () => {
 
@@ -32,14 +31,25 @@ const ContactForm = () => {
                 setError(false);
                 reset();
 
+                setTimeout(() => {
+                    setSubmitted(false);
+                }, 5000);
             } else {
                 setSubmitted(false);
                 setError(true);
+
+                setTimeout(() => {
+                    setError(false);
+                }, 5000);
             }
         } catch (error) {
             console.error("Error sending email:", error);
             setSubmitted(false);
             setError(true);
+
+            setTimeout(() => {
+                setError(false);
+            }, 5000);
         }
     };
 
@@ -115,25 +125,34 @@ const ContactForm = () => {
                         </div>
                     </div>
                     <div className="flex flex-col mt-8 gap-y-8">
-                        {submitted && (
-                            <motion.p
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.3 }}
-                                className="flex items-center px-3 py-4 text-base text-muted-foreground bg-[#FFF1F6]">
-                                Thank you! Your message has been sent successfully. ✅ We’ll get back to you as soon as possible.
-                            </motion.p>
-                        )}
-
-                        {isError && (
-                            <motion.p
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.3 }}
-                                className="flex items-center px-3 py-4 text-base text-red-800 bg-red-100">
-                                Sorry, something went wrong. Your message could not be sent. Please try again. ❌
-                            </motion.p>
-                        )}
+                        <AnimatePresence>
+                            {submitted && (
+                                <motion.p
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="flex items-center px-3 py-4 text-base text-muted-foreground bg-[#FFF1F6]"
+                                >
+                                    Thank you! Your message has been sent successfully. ✅
+                                    We’ll get back to you as soon as possible.
+                                </motion.p>
+                            )}
+                        </AnimatePresence>
+                        <AnimatePresence>
+                            {isError && (
+                                <motion.p
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="flex items-center px-3 py-4 text-base text-red-800 bg-red-100"
+                                >
+                                    Sorry, something went wrong. Your message could not be sent.
+                                    Please try again. ❌
+                                </motion.p>
+                            )}
+                        </AnimatePresence>
                         <button
                             type="submit"
                             disabled={isSubmitting}
